@@ -128,6 +128,14 @@ with preRech:
     st.divider()
     st.write("Herramienta diseñada para extraer N° de fila desde un archivo PDF y filtrar esas filas del Excel")
 
+        # Tabla con códigos de rechazo
+    st.markdown("### Códigos de Rechazo Frecuentes")
+    codigos_rechazo = {
+        "Código": ["R001", "R002", "R007"],
+        "Descripción": ["DOCUMENTO ERRADO", "CUENTA INVALIDA", "RECHAZO POR CCI"]}
+    
+    df_codigos = pd.DataFrame(codigos_rechazo)
+    st.table(df_codigos)
     st.markdown("### ARCHIVO PDF")
     pdf_file_filas = st.file_uploader("Sube un archivo PDF con números de fila", type="pdf", key="pdf_filas")
     st.markdown("### MASIVO EXCEL")
