@@ -6,7 +6,11 @@ from openpyxl import load_workbook, Workbook
 from openpyxl.styles import PatternFill
 import re
 
-st.title("PAGOS MASIVOS")
+st.title("RECHAZOS DE PAGOS MASIVOS")
+
+# Crear pestañas
+preRech, postRech = st.tabs(["📄 PRE RECHAZOS BCP", "📄 POST RECHAZOS"])
+
 st.divider()
 st.write("Herramienta diseñada para extraer DNI desde un archivo PDF y filtrar automáticamente en la base de datos de un Excel")
 
@@ -103,3 +107,4 @@ if pdf_file and excel_file:
         data=output_filtrado,
         file_name="resaltado_filtrado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    #--------------------------------------------------------------------------------------
