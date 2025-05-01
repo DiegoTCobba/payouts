@@ -51,17 +51,6 @@ if pdf_file and excel_file:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
 
-    # Eliminar filas cuya celda en la columna A no sea amarilla
-    filas_a_eliminar = []
-    for row_idx, row in enumerate(ws.iter_rows(), start=1):  # Iterar con índice de fila
-        # Verificar si la celda de la columna A tiene fondo amarillo
-        if row[0].fill != fill:  # Si la celda de la columna A no es amarilla
-            filas_a_eliminar.append(row_idx)
-
-    # Eliminar filas no amarillas en la columna A
-    for idx in reversed(filas_a_eliminar):  # Reverso para evitar problemas al eliminar
-        ws.delete_rows(idx)
-
     # Guardar archivo en memoria
     wb.save(output)
     output.seek(0)
@@ -71,17 +60,14 @@ if pdf_file and excel_file:
     columns = next(data)
     df_resaltado = pd.DataFrame(data, columns=columns)
 
-    # Limpiar el DataFrame, convirtiendo todos los valores a cadenas
-    df_visible_cleaned = df_resaltado.applymap(str)  # Convertir todos los valores a cadenas
-
     # Ocultar columnas específicas por letra
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
     # Convertir letras a índices (0-based)
     letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
 
     # Eliminar del DataFrame
-    columnas_visibles = [col for idx, col in enumerate(df_visible_cleaned.columns) if idx not in letras_a_indices]
-    df_visible = df_visible_cleaned[columnas_visibles]
+    columnas_visibles = [col for idx, col in enumerate(df_resaltado.columns) if idx not in letras_a_indices]
+    df_visible = df_resaltado[columnas_visibles]
 
     # Mostrar DataFrame filtrado en la app
     st.subheader("📊 Vista previa final con columnas ocultas:")
