@@ -10,7 +10,7 @@ excel_file = st.file_uploader("Sube un archivo Excel", type=["xlsx"])
 
 if pdf_file and excel_file:
     # Extraer texto del PDF
-    with fitz.open(stream=pdf_file.read(), filetype="pdf") as doc:
+     fitz.open(stream=pdf_file.read(), filetype="pdf") as doc:
         text = ""
         for page in doc:
             text += page.get_text()
