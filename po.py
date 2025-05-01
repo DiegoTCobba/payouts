@@ -19,12 +19,15 @@ if pdf_file and excel_file:
         for page in doc:
             text += page.get_text()
 
-    # Buscar números de documento (ajustar expresión según tu formato)
-    numeros_documento = re.findall(r'\d{6,}', text)
+    # Eliminar posibles números de cuenta como 380-75148297-0-31
+    cuentas_posibles = re.findall(r'\b[\d]{2,4}-[\d]{5,10}-\d{1,2}-\d{1,3}\b', text)
+    for cuenta in cuentas_posibles:
+        text = text.replace(cuenta, '')
+
+    # Buscar números de documento puros de 6 o más dígitos (sin símbolos ni guiones)
+    numeros_documento = re.findall(r'\b\d{6,}\b', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
-    st.success(f"Números de documento encontrados: {len(numeros_documento)}")
-    st.write(numeros_documento)
 
     # Leer Excel con pandas (previa visualización)
     df = pd.read_excel(excel_file)
