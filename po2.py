@@ -133,7 +133,8 @@ with preRech:
 
             # Extraer números de fila (1 o más dígitos)
             numeros_filas = re.findall(r'Registro\s+(\d+)', text, re.IGNORECASE)
-            numeros_filas = list(set(int(n) for n in numeros_filas if int(n) >= 2))  # Evitar encabezados
+            numeros_filas = list(set(int(n) + 1 for n in numeros_filas if int(n) >= 1))
+
 
             # Cargar Excel
             wb = load_workbook(excel_file_filas)
