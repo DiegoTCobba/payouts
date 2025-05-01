@@ -15,6 +15,7 @@ preRech, postRech = st.tabs(["📄 PRE RECHAZOS BCP", "📄 POST RECHAZOS"])
 
 with postRech:
     st.subheader("POST RECHAZOS")
+    st.divider()
 
     st.write("Herramienta diseñada para extraer DNI desde un archivo PDF y filtrar automáticamente en la base de datos de un Excel")
 
@@ -113,6 +114,8 @@ with postRech:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 #--------------------------------------------------------------------------------------
 with preRech:
+    st.subheader("PRE RECHAZOS")
+    st.divider()
     st.write("Herramienta diseñada para extraer N° de fila desde un archivo PDF y filtrar esas filas del Excel")
 
     st.markdown("### ARCHIVO PDF")
