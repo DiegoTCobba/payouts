@@ -18,7 +18,7 @@ if pdf_file and excel_file:
             text += page.get_text()
 
     # Extraer los números de documento
-    
+    import re
     numeros_documento = re.findall(r'\d{6,}', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
