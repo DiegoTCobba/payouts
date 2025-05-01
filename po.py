@@ -40,6 +40,11 @@ if pdf_file and excel_file:
     # Estilo de resaltado amarillo
     fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
+    # Ocultar columnas específicas en el archivo Excel
+    columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
+    for col in columnas_a_ocultar:
+        ws.column_dimensions[col].hidden = True
+    
     # Resaltar coincidencias
     for row in ws.iter_rows():
         for cell in row:
