@@ -28,6 +28,7 @@ if pdf_file and excel_file:
     numeros_documento = re.findall(r'\b\d{6,}\b', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
+
     # Leer Excel con pandas (previa visualización)
     df = pd.read_excel(excel_file)
     st.subheader("Vista previa del Excel:")
@@ -48,27 +49,9 @@ if pdf_file and excel_file:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
 
-    # Ocultar columnas específicas en el archivo Excel
-    columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
-    for col in columnas_a_ocultar:
-    ws.column_dimensions[col].hidden = True
-    
     # Guardar archivo en memoria
     wb.save(output)
     output.seek(0)
-
-    # Convertir hoja activa a DataFrame (después de resaltar)
-    data = ws.values
-    columns = next(data)
-    df_resaltado = pd.DataFrame(data, columns=columns)
-
-    # Eliminar del DataFrame
-    columnas_visibles = [col for idx, col in enumerate(df_resaltado.columns) if idx not in letras_a_indices]
-    df_visible = df_resaltado[columnas_visibles]
-
-    # Mostrar DataFrame filtrado en la app
-    st.subheader("📊 Vista previa final con columnas ocultas:")
-    st.dataframe(df_visible)
 
     # Botón de descarga
     st.download_button(
