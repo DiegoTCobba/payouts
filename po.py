@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import io
-from openpyxl import load_workbook
-from openpyxl.styles import PatternFill
 
 st.title("Filtrado y resaltado de Excel desde PDF")
 
