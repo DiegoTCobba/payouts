@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-pip install PyMuPDF
-import fitz
+import PyMuPDF
 import io
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
