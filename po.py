@@ -44,36 +44,24 @@ if pdf_file and excel_file:
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
     for col in columnas_a_ocultar:
         ws.column_dimensions[col].hidden = True
-    
+
     # Resaltar coincidencias
     for row in ws.iter_rows():
         for cell in row:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
 
-    # Eliminar las filas donde la columna A tiene celdas sin relleno amarillo
-    rows_to_delete = []
-    for i, row in enumerate(ws.iter_rows(min_row=2), start=2):  # Saltar encabezado
-        if ws[f"A{i}"].fill != fill:  # Si la celda en la columna A no tiene relleno amarillo
-            rows_to_delete.append(i)
+    # Guardar archivo en memoria
+    wb.save(output)
+    output.seek(0)
 
-    # Eliminar las filas desde el final hacia el principio (para no afectar los índices al eliminar)
-    for row_index in reversed(rows_to_delete):
-        ws.delete_rows(row_index)
-
-    # Filtrar filas con al menos una celda resaltada en amarillo
-    filas_resaltadas = []
-    for row in ws.iter_rows(min_row=2):  # Saltamos el encabezado
-        if ws[f"A{row[0].row}"].fill == fill:  # Verificamos si la columna A tiene relleno amarillo
-            filas_resaltadas.append([cell.value for cell in row])
-
-    # Convertir filas filtradas a DataFrame
-    columns = [cell.value for cell in next(ws.iter_rows(min_row=1, max_row=1))]
-    df_resaltado = pd.DataFrame(filas_resaltadas, columns=columns)
+    # Convertir hoja activa a DataFrame (después de resaltar)
+    data = ws.values
+    columns = next(data)
+    df_resaltado = pd.DataFrame(data, columns=columns)
 
     # Ocultar columnas específicas por letra
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
-    
     # Convertir letras a índices (0-based)
     letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
 
@@ -85,10 +73,6 @@ if pdf_file and excel_file:
     st.subheader("📊 Vista previa final con columnas ocultas:")
     st.dataframe(df_visible)
 
-    # Guardar archivo en memoria (ahora sin filas blancas)
-    wb.save(output)
-    output.seek(0)
-
     # Botón de descarga
     st.download_button(
         label="📥 Descargar Excel con resaltado",
@@ -96,5 +80,3 @@ if pdf_file and excel_file:
         file_name="resaltado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-
