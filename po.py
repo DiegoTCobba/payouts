@@ -38,10 +38,10 @@ if pdf_file and excel_file:
     wb = load_workbook(excel_file)
     ws = wb.active
 
-    # Estilo de resaltado
+    # Resaltado relleno amarillo
     fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
-    # Columnas a ocultar (por letra)
+    # Columnas a ocultar en el excel
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
     for col in columnas_a_ocultar:
         ws.column_dimensions[col].hidden = True
@@ -52,7 +52,7 @@ if pdf_file and excel_file:
         if any(str(cell.value) in documentos_set for cell in row):
             filas_con_coincidencias.append([cell.value for cell in row])
 
-    # Crear nuevo libro
+    # Crear excel nuevo
     wb_filtrado = Workbook()
     ws_filtrado = wb_filtrado.active
 
@@ -74,7 +74,7 @@ if pdf_file and excel_file:
     for col in columnas_a_ocultar:
         ws_filtrado.column_dimensions[col].hidden = True
 
-    # ✅ Copiar ancho de columnas visibles
+    #Mantener ancho de columnas no ocultas
     from openpyxl.utils import get_column_letter
     for col_idx in range(1, ws.max_column + 1):
         letra = get_column_letter(col_idx)
@@ -94,12 +94,12 @@ if pdf_file and excel_file:
     columnas_visibles = [col for idx, col in enumerate(df_filtrado.columns) if idx not in letras_a_indices]
     df_visible = df_filtrado[columnas_visibles]
 
-    st.subheader("📊 Vista previa final con filas y columnas filtradas:")
+    st.subheader("Vista previa final con filas y columnas filtradas:")
     st.dataframe(df_visible)
 
     # Botón descarga
     st.download_button(
-        label="📥 Descargar Excel con resaltado y filas filtradas",
+        label="Descargar Excel con resaltado y filas filtradas",
         data=output_filtrado,
         file_name="resaltado_filtrado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
