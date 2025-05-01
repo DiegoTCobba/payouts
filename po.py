@@ -50,18 +50,28 @@ if pdf_file and excel_file:
         for cell in row:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
+    # Ocultar filas que no tienen ninguna celda resaltada
+    for i, row in enumerate(ws.iter_rows(min_row=2), start=2):  # min_row=2 para saltar encabezados
+        if not any(cell.fill == fill for cell in row):
+            ws.row_dimensions[i].hidden = True
 
     # Guardar archivo en memoria
     wb.save(output)
     output.seek(0)
 
-    # Convertir hoja activa a DataFrame (después de resaltar)
-    data = ws.values
-    columns = next(data)
-    df_resaltado = pd.DataFrame(data, columns=columns)
+    # Filtrar filas: conservar solo las que tienen al menos una celda resaltada
+    filas_resaltadas = []
+    for row in ws.iter_rows():
+        if any(cell.fill == fill for cell in row):
+            filas_resaltadas.append([cell.value for cell in row])
+
+    # Convertir filas filtradas a DataFrame
+    columns = [cell.value for cell in next(ws.iter_rows(min_row=1, max_row=1))]
+    df_resaltado = pd.DataFrame(filas_resaltadas, columns=columns)
 
     # Ocultar columnas específicas por letra
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
+    
     # Convertir letras a índices (0-based)
     letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
 
