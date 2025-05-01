@@ -42,7 +42,7 @@ if pdf_file and excel_file:
     fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
     # Columnas a ocultar en el excel
-    columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
+    columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P']
     for col in columnas_a_ocultar:
         ws.column_dimensions[col].hidden = True
 
