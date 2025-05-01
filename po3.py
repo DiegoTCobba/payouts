@@ -99,7 +99,7 @@ if pdf_file and excel_file:
 
     # Botón descarga
     st.download_button(
-        label="Descargar Excel con resaltado y filas filtradas",
+        label="Descargar Excel filtrado",
         data=output_filtrado,
         file_name="resaltado_filtrado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
