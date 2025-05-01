@@ -6,7 +6,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 import re
 
-st.title("📄🔍 Filtrado y resaltado de Excel desde PDF")
+st.title("📄🔍 Filtrado y resaltado de clientes a rechazar")
 
 # Subir archivos
 pdf_file = st.file_uploader("Sube un archivo PDF", type="pdf")
