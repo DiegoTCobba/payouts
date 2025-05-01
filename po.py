@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import pymupdf  
+import fitz  # PyMuPDF
 import io
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
@@ -13,7 +13,7 @@ excel_file = st.file_uploader("Sube un archivo Excel", type=["xlsx"])
 
 if pdf_file and excel_file:
     # Extraer texto del PDF
-    with pymupdf.open(stream=pdf_file.read(), filetype="pdf") as doc:
+    with fitz.open(stream=pdf_file.read(), filetype="pdf") as doc:
         text = ""
         for page in doc:
             text += page.get_text()
