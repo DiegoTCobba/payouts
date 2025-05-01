@@ -10,11 +10,15 @@ st.title("PAGOS MASIVOS")
 st.divider()
 st.write("Herramienta diseñada para extraer DNI desde un archivo PDF y filtrar automáticamente en la base de datos de un Excel")
 
-# Subir archivos
-st.subheader("ARCHIVO PDF")
-pdf_file = st.file_uploader("Sube un archivo PDF", type="pdf")
-st.subheader("MASIVO EXCEL")
-excel_file = st.file_uploader("Sube un archivo Excel", type=["xlsx"])
+st.markdown("### ARCHIVO PDF")
+st.markdown("Sube un archivo PDF:")
+
+pdf_file = st.file_uploader("", type="pdf")
+
+st.markdown("### MASIVO EXCEL")
+st.markdown("Sube un archivo Excel:")
+
+excel_file = st.file_uploader("", type=["xlsx"])
 
 if pdf_file and excel_file:
     # Extraer texto del PDF
