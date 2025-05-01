@@ -51,6 +51,17 @@ if pdf_file and excel_file:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
 
+    # Eliminar filas cuya celda en la columna A no sea amarilla
+    filas_a_eliminar = []
+    for row_idx, row in enumerate(ws.iter_rows(), start=1):  # Iterar con índice de fila
+        # Verificar si la celda de la columna A tiene fondo amarillo
+        if row[0].fill != fill:  # Si la celda de la columna A no es amarilla
+            filas_a_eliminar.append(row_idx)
+
+    # Eliminar filas no amarillas en la columna A
+    for idx in reversed(filas_a_eliminar):  # Reverso para evitar problemas al eliminar
+        ws.delete_rows(idx)
+
     # Guardar archivo en memoria
     wb.save(output)
     output.seek(0)
