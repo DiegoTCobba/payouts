@@ -27,7 +27,9 @@ if pdf_file and excel_file:
     # Buscar números de documento puros de 6 o más dígitos (sin símbolos ni guiones)
     numeros_documento = re.findall(r'\b\d{6,}\b', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
-
+    
+    # Leer Excel con pandas (previa visualización)
+    df = pd.read_excel(excel_file)
 
     # Reposicionar puntero para openpyxl
     output = io.BytesIO()
@@ -38,20 +40,27 @@ if pdf_file and excel_file:
     # Estilo de resaltado amarillo
     fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
-    # Resaltar coincidencias
-    for row in ws.iter_rows():
+    # Resaltar coincidencias y marcar filas a mantener
+    rows_to_keep = set()
+
+    for i, row in enumerate(ws.iter_rows(), start=1):
         for cell in row:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
+                rows_to_keep.add(i)  # Guardar el número de fila (1-based)
 
     # Guardar archivo en memoria
     wb.save(output)
     output.seek(0)
 
     # Convertir hoja activa a DataFrame (después de resaltar)
-    data = ws.values
-    columns = next(data)
-    df_resaltado = pd.DataFrame(data, columns=columns)
+    data = list(ws.values)
+    columns = data[0]
+    data_rows = data[1:]
+
+    # Mantener solo filas resaltadas
+    rows_filtered = [row for idx, row in enumerate(data_rows, start=2) if idx in rows_to_keep]
+    df_resaltado = pd.DataFrame(rows_filtered, columns=columns)
 
     # Ocultar columnas específicas por letra
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
