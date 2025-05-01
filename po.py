@@ -62,11 +62,6 @@ if pdf_file and excel_file:
     columns = next(data)
     df_resaltado = pd.DataFrame(data, columns=columns)
 
-    # Ocultar columnas específicas por letra
-    columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
-    # Convertir letras a índices (0-based)
-    letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
-
     # Eliminar del DataFrame
     columnas_visibles = [col for idx, col in enumerate(df_resaltado.columns) if idx not in letras_a_indices]
     df_visible = df_resaltado[columnas_visibles]
