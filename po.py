@@ -11,9 +11,9 @@ st.divider()
 st.write("Herramienta diseñada para extraer DNI desde un archivo PDF y filtrar automáticamente en la base de datos de un Excel")
 
 # Subir archivos
-st.subheader("ARCHIVO PDF")
+st.markdown("### ARCHIVO PDF")
 pdf_file = st.file_uploader("Sube un archivo PDF", type="pdf")
-st.subheader("MASIVO EXCEL")
+st.markdown("### MASIVO EXCEL")
 excel_file = st.file_uploader("Sube un archivo Excel", type=["xlsx"])
 
 if pdf_file and excel_file:
