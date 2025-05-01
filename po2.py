@@ -153,7 +153,7 @@ with preRech:
             ws_nuevo.append(encabezados)
 
             fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
-            columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P','Q']
+            columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P','R']
 
             for fila in filas_seleccionadas:
                 ws_nuevo.append(fila)
