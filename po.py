@@ -29,7 +29,7 @@ if pdf_file and excel_file:
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
     documentos_set = set(numeros_documento)
 
-    # Leer Excel con pandas (visualización previa)
+    # Leer Excel con pandas
     df = pd.read_excel(excel_file)
 
     # Reposicionar puntero para openpyxl
@@ -37,21 +37,21 @@ if pdf_file and excel_file:
     wb = load_workbook(excel_file)
     ws = wb.active
 
-    # Estilo de resaltado amarillo
+    # Estilo de resaltado
     fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
-    # Ocultar columnas específicas en el archivo Excel
+    # Columnas a ocultar (por letra)
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
     for col in columnas_a_ocultar:
         ws.column_dimensions[col].hidden = True
 
     # Filtrar filas con coincidencias
     filas_con_coincidencias = []
-    for row in ws.iter_rows(min_row=2, values_only=False):  # min_row=2 omite encabezados
+    for row in ws.iter_rows(min_row=2, values_only=False):
         if any(str(cell.value) in documentos_set for cell in row):
             filas_con_coincidencias.append([cell.value for cell in row])
 
-    # Crear nuevo libro de Excel solo con filas filtradas
+    # Crear nuevo libro
     wb_filtrado = Workbook()
     ws_filtrado = wb_filtrado.active
 
@@ -59,39 +59,44 @@ if pdf_file and excel_file:
     encabezados = [cell.value for cell in ws[1]]
     ws_filtrado.append(encabezados)
 
-    # Agregar filas filtradas y resaltar coincidencias
+    # Agregar filas filtradas
     for row in filas_con_coincidencias:
         ws_filtrado.append(row)
 
+    # Aplicar resaltado
     for row in ws_filtrado.iter_rows(min_row=2):
         for cell in row:
             if str(cell.value) in documentos_set:
                 cell.fill = fill
 
-    # Ocultar columnas en la hoja final
+    # Ocultar columnas
     for col in columnas_a_ocultar:
         ws_filtrado.column_dimensions[col].hidden = True
 
-    # Guardar a archivo en memoria
+    # ✅ Copiar ancho de columnas visibles
+    from openpyxl.utils import get_column_letter
+    for col_idx in range(1, ws.max_column + 1):
+        letra = get_column_letter(col_idx)
+        if letra not in columnas_a_ocultar:
+            if letra in ws.column_dimensions and ws.column_dimensions[letra].width:
+                ancho = ws.column_dimensions[letra].width
+                ws_filtrado.column_dimensions[letra].width = ancho
+
+    # Guardar nuevo archivo en memoria
     output_filtrado = io.BytesIO()
     wb_filtrado.save(output_filtrado)
     output_filtrado.seek(0)
 
-    # Convertir filas filtradas a DataFrame para vista previa
+    # Mostrar vista previa
     df_filtrado = pd.DataFrame(filas_con_coincidencias, columns=encabezados)
-
-    # Convertir letras de columnas ocultas a índices
     letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
-
-    # Ocultar columnas también en el DataFrame mostrado
     columnas_visibles = [col for idx, col in enumerate(df_filtrado.columns) if idx not in letras_a_indices]
     df_visible = df_filtrado[columnas_visibles]
 
-    # Mostrar resultado en pantalla
     st.subheader("📊 Vista previa final con filas y columnas filtradas:")
     st.dataframe(df_visible)
 
-    # Botón para descargar archivo filtrado
+    # Botón descarga
     st.download_button(
         label="📥 Descargar Excel con resaltado y filas filtradas",
         data=output_filtrado,
