@@ -50,19 +50,21 @@ if pdf_file and excel_file:
         for cell in row:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
-    # Ocultar filas que no tienen ninguna celda resaltada
-    for i, row in enumerate(ws.iter_rows(min_row=2), start=2):  # min_row=2 para saltar encabezados
-        if not any(cell.fill == fill for cell in row):
-            ws.row_dimensions[i].hidden = True
+    
+    # Eliminar las filas donde la columna A tiene celdas sin relleno amarillo
+    rows_to_delete = []
+    for i, row in enumerate(ws.iter_rows(min_row=2), start=2):  # Saltar encabezado
+        if ws[f"A{i}"].fill != fill:  # Si la celda en la columna A no tiene relleno amarillo
+            rows_to_delete.append(i)
 
-    # Guardar archivo en memoria
-    wb.save(output)
-    output.seek(0)
+    # Eliminar las filas desde el final hacia el principio (para no afectar los índices al eliminar)
+    for row_index in reversed(rows_to_delete):
+        ws.delete_rows(row_index)
 
-    # Filtrar filas: conservar solo las que tienen al menos una celda resaltada
+    # Filtrar filas con al menos una celda resaltada en amarillo
     filas_resaltadas = []
-    for row in ws.iter_rows():
-        if any(cell.fill == fill for cell in row):
+    for row in ws.iter_rows(min_row=2):  # Saltamos el encabezado
+        if ws[f"A{row[0].row}"].fill == fill:  # Verificamos si la columna A tiene relleno amarillo
             filas_resaltadas.append([cell.value for cell in row])
 
     # Convertir filas filtradas a DataFrame
@@ -90,3 +92,4 @@ if pdf_file and excel_file:
         file_name="resaltado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
