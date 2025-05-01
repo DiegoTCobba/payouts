@@ -54,13 +54,9 @@ if pdf_file and excel_file:
     output.seek(0)
 
     # Convertir hoja activa a DataFrame (después de resaltar)
-    data = list(ws.values)
-    columns = data[0]
-    data_rows = data[1:]
-
-    # Mantener solo filas resaltadas
-    rows_filtered = [row for idx, row in enumerate(data_rows, start=2) if idx in rows_to_keep]
-    df_resaltado = pd.DataFrame(rows_filtered, columns=columns)
+    data = ws.values
+    columns = next(data)
+    df_resaltado = pd.DataFrame(data, columns=columns)
 
     # Ocultar columnas específicas por letra
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
