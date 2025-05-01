@@ -24,8 +24,8 @@ with postRech:
     st.markdown("### Códigos de Rechazo Frecuentes")
     codigos_rechazo = {
         "Código": ["R001", "R002", "R007"],
-        "Descripción": ["DOCUMENTO ERRADO", "CUENTA INVALIDA", "RECHAZO POR CCI"]
-    }
+        "Descripción": ["DOCUMENTO ERRADO", "CUENTA INVALIDA", "RECHAZO POR CCI"]}
+    
     df_codigos = pd.DataFrame(codigos_rechazo)
     st.table(df_codigos)
     
