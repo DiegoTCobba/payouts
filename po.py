@@ -6,7 +6,9 @@ from openpyxl import load_workbook, Workbook
 from openpyxl.styles import PatternFill
 import re
 
-st.title("FILTRADO DE CLIENTES A RECHAZAR")
+st.title("PAGOS MASIVOS")
+st.divider()
+st.write("Herramienta para filtrar clientes en documentos formato PDF en excel")
 
 # Subir archivos
 pdf_file = st.file_uploader("Sube un archivo PDF", type="pdf")
