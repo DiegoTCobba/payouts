@@ -33,9 +33,6 @@ if pdf_file and excel_file:
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
     documentos_set = set(numeros_documento)
 
-    # Leer Excel con pandas
-    df = pd.read_excel(excel_file)
-
     # Reposicionar puntero para openpyxl
     excel_file.seek(0)
     wb = load_workbook(excel_file)
