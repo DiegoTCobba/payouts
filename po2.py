@@ -189,3 +189,6 @@ with preRech:
                 file_name="filtrado_por_filas_pdf.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
+
+        except Exception as e:
+            st.error(f"Ocurrió un error: {e}")
