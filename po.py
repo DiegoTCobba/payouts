@@ -29,9 +29,6 @@ if pdf_file and excel_file:
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
 
-    # Leer Excel con pandas (previa visualización)
-    df = pd.read_excel(excel_file)
-
     # Reposicionar puntero para openpyxl
     output = io.BytesIO()
     excel_file.seek(0)
