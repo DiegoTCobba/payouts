@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import fitz
 import io
 
 st.title("Filtrado y resaltado de Excel desde PDF")
