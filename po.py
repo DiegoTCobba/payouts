@@ -1,10 +1,12 @@
 import streamlit as st
 import pandas as pd
-import fitz
+import fitz  # PyMuPDF
 import io
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
 import re
 
-st.title("Filtrado y resaltado de Excel desde PDF")
+st.title("📄🔍 Filtrado y resaltado de Excel desde PDF")
 
 # Subir archivos
 pdf_file = st.file_uploader("Sube un archivo PDF", type="pdf")
@@ -12,45 +14,50 @@ excel_file = st.file_uploader("Sube un archivo Excel", type=["xlsx"])
 
 if pdf_file and excel_file:
     # Extraer texto del PDF
-     with fitz.open(stream=pdf_file.read(), filetype="pdf") as doc:
-        text = ""
+    text = ""
+    with fitz.open(stream=pdf_file.read(), filetype="pdf") as doc:
         for page in doc:
             text += page.get_text()
 
-    # Extraer los números de documento
-    
-    numeros_documento = re.findall('\d{6,9}\d', text)
+    # Buscar números de documento (ajustar expresión según tu formato)
+    numeros_documento = re.findall(r'\d{6,}', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
-    st.write("Números de documento encontrados:", numeros_documento)
+    st.success(f"Números de documento encontrados: {len(numeros_documento)}")
+    st.write(numeros_documento)
 
-    # Leer el Excel
+    # Leer Excel con pandas (previa visualización)
     df = pd.read_excel(excel_file)
-    st.write("Vista previa del Excel:")
+    st.subheader("Vista previa del Excel:")
     st.dataframe(df)
 
-    # Buscar en todas las columnas si algún valor coincide
+    # Reposicionar puntero para openpyxl
     output = io.BytesIO()
     excel_file.seek(0)
     wb = load_workbook(excel_file)
     ws = wb.active
 
-    # Estilo de resaltado
+    # Estilo de resaltado amarillo
     fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 
-    # Resaltar celdas con coincidencias
+    # Resaltar coincidencias
     for row in ws.iter_rows():
         for cell in row:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
 
-    # Guardar a BytesIO y permitir descarga
+    # Guardar archivo en memoria
     wb.save(output)
     output.seek(0)
 
+    # Botón de descarga
     st.download_button(
-        label="📥 Descargar Excel resaltado",
+        label="📥 Descargar Excel con resaltado",
         data=output,
+        file_name="resaltado.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
         file_name="resaltado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
