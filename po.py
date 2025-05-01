@@ -71,23 +71,13 @@ if pdf_file and excel_file:
     columns = next(data)
     df_resaltado = pd.DataFrame(data, columns=columns)
 
+    # Limpiar el DataFrame, convirtiendo todos los valores a cadenas
+    df_visible_cleaned = df_resaltado.applymap(str)  # Convertir todos los valores a cadenas
+
     # Ocultar columnas específicas por letra
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
     # Convertir letras a índices (0-based)
     letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
 
     # Eliminar del DataFrame
-    columnas_visibles = [col for idx, col in enumerate(df_resaltado.columns) if idx not in letras_a_indices]
-    df_visible = df_resaltado[columnas_visibles]
-
-    # Mostrar DataFrame filtrado en la app
-    st.subheader("📊 Vista previa final con columnas ocultas:")
-    st.dataframe(df_visible)
-
-    # Botón de descarga
-    st.download_button(
-        label="📥 Descargar Excel con resaltado",
-        data=output,
-        file_name="resaltado.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+    columnas_visibles_
