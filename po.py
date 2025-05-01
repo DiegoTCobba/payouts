@@ -50,7 +50,7 @@ if pdf_file and excel_file:
         for cell in row:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
-    
+
     # Eliminar las filas donde la columna A tiene celdas sin relleno amarillo
     rows_to_delete = []
     for i, row in enumerate(ws.iter_rows(min_row=2), start=2):  # Saltar encabezado
@@ -85,6 +85,10 @@ if pdf_file and excel_file:
     st.subheader("📊 Vista previa final con columnas ocultas:")
     st.dataframe(df_visible)
 
+    # Guardar archivo en memoria (ahora sin filas blancas)
+    wb.save(output)
+    output.seek(0)
+
     # Botón de descarga
     st.download_button(
         label="📥 Descargar Excel con resaltado",
@@ -92,4 +96,5 @@ if pdf_file and excel_file:
         file_name="resaltado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
 
