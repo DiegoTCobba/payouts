@@ -10,7 +10,7 @@ st.title("PAGOS MASIVOS")
 st.divider()
 st.write("Herramienta diseñada para extraer DNI desde un archivo PDF y filtrar automáticamente en la base de datos de un Excel")
 
-# Subir archivos
+# Subir de archivos pdf y excel
 st.markdown("### ARCHIVO PDF")
 pdf_file = st.file_uploader("Sube un archivo PDF", type="pdf")
 st.markdown("### MASIVO EXCEL")
@@ -28,7 +28,7 @@ if pdf_file and excel_file:
     for cuenta in cuentas_posibles:
         text = text.replace(cuenta, '')
 
-    # Buscar números de documento puros de 6 o más dígitos (sin símbolos ni guiones)
+    # Buscar números de documento de 6 o más dígitos
     numeros_documento = re.findall(r'\b\d{6,}\b', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
     documentos_set = set(numeros_documento)
