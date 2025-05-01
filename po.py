@@ -48,6 +48,11 @@ if pdf_file and excel_file:
             if str(cell.value) in numeros_documento:
                 cell.fill = fill
 
+    # Ocultar columnas específicas en el archivo Excel
+    columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
+    for col in columnas_a_ocultar:
+    ws.column_dimensions[col].hidden = True
+    
     # Guardar archivo en memoria
     wb.save(output)
     output.seek(0)
