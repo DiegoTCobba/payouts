@@ -19,7 +19,7 @@ if pdf_file and excel_file:
 
     # Extraer los números de documento
     
-    numeros_documento = re.findall(r'\d{6,9}\d', text)
+    numeros_documento = re.findall('\d{6,9}\d', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
     st.write("Números de documento encontrados:", numeros_documento)
