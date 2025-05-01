@@ -102,5 +102,4 @@ if pdf_file and excel_file:
         label="Descargar Excel con resaltado y filas filtradas",
         data=output_filtrado,
         file_name="resaltado_filtrado.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
