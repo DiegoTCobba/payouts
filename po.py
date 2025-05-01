@@ -28,6 +28,8 @@ if pdf_file and excel_file:
     numeros_documento = re.findall(r'\b\d{6,}\b', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
+    st.success(f"Números de documento encontrados: {len(numeros_documento)}")
+    st.write(numeros_documento)
 
     # Leer Excel con pandas (previa visualización)
     df = pd.read_excel(excel_file)
