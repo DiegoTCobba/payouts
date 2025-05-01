@@ -15,7 +15,7 @@ preRech, postRech = st.tabs(["📄 PRE RECHAZOS BCP", "📄 POST RECHAZOS"])
 
 with postRech:
     st.subheader("POST RECHAZOS")
-    st.divider()
+
     st.write("Herramienta diseñada para extraer DNI desde un archivo PDF y filtrar automáticamente en la base de datos de un Excel")
 
     # Subir de archivos pdf y excel
