@@ -28,7 +28,6 @@ if pdf_file and excel_file:
     numeros_documento = re.findall(r'\b\d{6,}\b', text)
     numeros_documento = list(set(numeros_documento))  # eliminar duplicados
 
-
     # Leer Excel con pandas (previa visualización)
     df = pd.read_excel(excel_file)
 
@@ -56,12 +55,20 @@ if pdf_file and excel_file:
     columns = next(data)
     df_resaltado = pd.DataFrame(data, columns=columns)
 
-    # Ocultar columnas específicas por letra
+     # Ocultar columnas específicas en el archivo Excel
     columnas_a_ocultar = ['B', 'C', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'R']
-    # Convertir letras a índices (0-based)
-    letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
+    for col in columnas_a_ocultar:
+        ws.column_dimensions[col].hidden = True
 
-    # Eliminar del DataFrame
+    # Guardar archivo en memoria
+    wb.save(output)
+    output.seek(0)
+
+    # Visualizar Excel modificado ocultando columnas (solo en pantalla)
+    data = ws.values
+    columns = next(data)
+    df_resaltado = pd.DataFrame(data, columns=columns)
+    letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
     columnas_visibles = [col for idx, col in enumerate(df_resaltado.columns) if idx not in letras_a_indices]
     df_visible = df_resaltado[columnas_visibles]
 
