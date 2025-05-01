@@ -4,6 +4,7 @@ import fitz  # PyMuPDF
 import io
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import PatternFill
+from openpyxl.utils import get_column_letter
 import re
 
 st.title("RECHAZOS DE PAGOS MASIVOS ")
