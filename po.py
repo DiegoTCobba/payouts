@@ -57,7 +57,3 @@ if pdf_file and excel_file:
         file_name="resaltado.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-        file_name="resaltado.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
