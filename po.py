@@ -31,8 +31,6 @@ if pdf_file and excel_file:
 
     # Leer Excel con pandas (previa visualización)
     df = pd.read_excel(excel_file)
-    st.subheader("Vista previa del Excel:")
-    st.dataframe(df)
 
     # Reposicionar puntero para openpyxl
     output = io.BytesIO()
