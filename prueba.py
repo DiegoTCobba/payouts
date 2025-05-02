@@ -46,16 +46,16 @@ with postRech:
         cuentas_posibles = re.findall(r'\b[\d]{2,4}-[\d]{5,10}-\d{1,2}-\d{1,3}\b', text)
         for cuenta in cuentas_posibles:
             text = text.replace(cuenta, '')
-        # Buscar pares (DNI, MONTO)
+
+        # Buscar pares (DNI, MONTO) en el texto del PDF
         dni_monto_pairs = re.findall(r'(\d{6,})\s+[A-ZÁÉÍÓÚÑ ]+\s+[0-9\-]+[\s\S]*?S/\s*([\d.,]+)', text)
 
-        # Limpiar montos y eliminar duplicados
+        # Limpiar y estandarizar montos (remover comas, "S/", espacios)
         dni_monto_cleaned = set()
         for dni, monto in dni_monto_pairs:
-            # Estandarizar formato decimal
-            monto = monto.replace(",", "")
-            dni_monto_cleaned.add((dni, monto))
-  
+            monto = monto.replace(",", "").replace("S/", "").strip()
+            dni_monto_cleaned.add((dni.strip(), monto))
+
         # Reposicionar puntero para openpyxl
         excel_file.seek(0)
         wb = load_workbook(excel_file)
@@ -69,14 +69,22 @@ with postRech:
         for col in columnas_a_ocultar:
             ws.column_dimensions[col].hidden = True
 
-        # Filtrar filas con coincidencias
+        # Filtrar solo si coincide el DNI (col A) y Monto (col M)
         filas_con_coincidencias = []
         for row in ws.iter_rows(min_row=2, values_only=False):
-            celdas = [str(cell.value).replace(",", "") if cell.value is not None else "" for cell in row]
-            for dni, monto in dni_monto_cleaned:
-                if dni in celdas and monto in celdas:
-                    filas_con_coincidencias.append([cell.value for cell in row])
-                    break
+            dni_cell = row[0].value  # Columna A
+            monto_cell = row[12].value  # Columna M
+
+            if dni_cell is None or monto_cell is None:
+                continue
+
+            dni_str = str(dni_cell).strip()
+            monto_str = str(monto_cell).replace(",", "").replace("S/", "").strip()
+
+            if (dni_str, monto_str) in dni_monto_cleaned:
+                filas_con_coincidencias.append([c.value for c in row])
+                                        break
+                            break
 
         # Crear excel nuevo
         wb_filtrado = Workbook()
