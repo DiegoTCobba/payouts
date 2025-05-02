@@ -83,60 +83,62 @@ with postRech:
 
             if (dni_str, monto_str) in dni_monto_cleaned:
                 filas_con_coincidencias.append([c.value for c in row])
-                                        break
-                            break
+        # Verificar si hubo coincidencias
+        if not filas_con_coincidencias:
+            st.warning("No se encontraron coincidencias entre el PDF y el Excel.")
+        else:
+            # Crear excel nuevo
+            wb_filtrado = Workbook()
+            ws_filtrado = wb_filtrado.active
 
-        # Crear excel nuevo
-        wb_filtrado = Workbook()
-        ws_filtrado = wb_filtrado.active
+            # Encabezados
+            encabezados = [cell.value for cell in ws[1]]
+            ws_filtrado.append(encabezados)
 
-        # Encabezados
-        encabezados = [cell.value for cell in ws[1]]
-        ws_filtrado.append(encabezados)
+            # Agregar filas filtradas
+            for row in filas_con_coincidencias:
+                ws_filtrado.append(row)
 
-        # Agregar filas filtradas
-        for row in filas_con_coincidencias:
-            ws_filtrado.append(row)
+            # Aplicar resaltado solo a columnas A y M
+            for row in ws_filtrado.iter_rows(min_row=2):
+                if row[0].value is not None:
+                    row[0].fill = fill  # DNI
+                if len(row) > 12 and row[12].value is not None:
+                    row[12].fill = fill  # Monto
 
-        # Aplicar resaltado
-        for row in ws_filtrado.iter_rows(min_row=2):
-            for cell in row:
-                if str(cell.value) in documentos_set:
-                    cell.fill = fill
+            # Ocultar columnas
+            for col in columnas_a_ocultar:
+                ws_filtrado.column_dimensions[col].hidden = True
 
-        # Ocultar columnas
-        for col in columnas_a_ocultar:
-            ws_filtrado.column_dimensions[col].hidden = True
+            #Mantener ancho de columnas no ocultas
+            from openpyxl.utils import get_column_letter
+            for col_idx in range(1, ws.max_column + 1):
+                letra = get_column_letter(col_idx)
+                if letra not in columnas_a_ocultar:
+                    if letra in ws.column_dimensions and ws.column_dimensions[letra].width:
+                        ancho = ws.column_dimensions[letra].width
+                        ws_filtrado.column_dimensions[letra].width = ancho
 
-        #Mantener ancho de columnas no ocultas
-        from openpyxl.utils import get_column_letter
-        for col_idx in range(1, ws.max_column + 1):
-            letra = get_column_letter(col_idx)
-            if letra not in columnas_a_ocultar:
-                if letra in ws.column_dimensions and ws.column_dimensions[letra].width:
-                    ancho = ws.column_dimensions[letra].width
-                    ws_filtrado.column_dimensions[letra].width = ancho
+            # Guardar nuevo archivo en memoria
+            output_filtrado = io.BytesIO()
+            wb_filtrado.save(output_filtrado)
+            output_filtrado.seek(0)
 
-        # Guardar nuevo archivo en memoria
-        output_filtrado = io.BytesIO()
-        wb_filtrado.save(output_filtrado)
-        output_filtrado.seek(0)
+            # Mostrar vista previa
+            df_filtrado = pd.DataFrame(filas_con_coincidencias, columns=encabezados)
+            letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
+            columnas_visibles = [col for idx, col in enumerate(df_filtrado.columns) if idx not in letras_a_indices]
+            df_visible = df_filtrado[columnas_visibles]
 
-        # Mostrar vista previa
-        df_filtrado = pd.DataFrame(filas_con_coincidencias, columns=encabezados)
-        letras_a_indices = [ord(c) - ord('A') for c in columnas_a_ocultar]
-        columnas_visibles = [col for idx, col in enumerate(df_filtrado.columns) if idx not in letras_a_indices]
-        df_visible = df_filtrado[columnas_visibles]
+            st.subheader("Vista previa final con filas y columnas filtradas:")
+            st.dataframe(df_visible)
 
-        st.subheader("Vista previa final con filas y columnas filtradas:")
-        st.dataframe(df_visible)
-
-        # Botón descarga
-        st.download_button(
-            label="Descargar Excel con resaltado y filas filtradas",
-            data=output_filtrado,
-            file_name="resaltado_filtrado.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            # Botón descarga
+            st.download_button(
+                label="Descargar Excel con resaltado y filas filtradas",
+                data=output_filtrado,
+                file_name="resaltado_filtrado.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 #--------------------------------------------------------------------------------------
 with preRech:
     st.subheader("PRE RECHAZOS MASIVOS")
